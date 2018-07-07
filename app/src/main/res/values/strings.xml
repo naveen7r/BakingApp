@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">BackingApp</string>
+    <string name="title_item_detail">Item Detail</string>
+    <string name="recipe">RECIPE</string>
+    <string name="recipe_ingredients">Recipe Ingredients</string>
+    <string name="ingredi">INGREDIENT</string>
+    <string name="step">STEP</string>
+    <string name="isTwoPane">isTwoPane</string>
+    <string name="no_network_availble">No Network Available</string>
+    <string name="tryagain">Try Again</string>
+    <string name="prev">Previous</string>
+    <string name="next">Next</string>
+    <string name="position">position</string>
+    <string name="hasingredient">hasingredient</string>
+
+
+    <bool name="isTablet">false</bool>
+    <string name="appwidget_text">Receipe: \n\n</string>
+    <string name="add_widget">Add widget</string>
+    <string name="preference_file_key">PREF</string>
+    <string name="no_details">No details found</string>
+
+</resources>

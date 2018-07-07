@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/llDetail"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_grey">
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/exoPlayer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </com.google.android.exoplayer2.ui.PlayerView>
+
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlInstruction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/border_fill_grey">
+
+        <TextView
+            android:id="@+id/tvRecipieInstruction"
+            style="@style/white18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+
+            android:gravity="start"
+            app:fontFamily="@font/roboto_bold" />
+    </RelativeLayout>
+
+
+</LinearLayout>
+
+
+
