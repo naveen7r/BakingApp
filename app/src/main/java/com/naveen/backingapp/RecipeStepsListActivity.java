@@ -6,10 +6,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 
 import com.naveen.backingapp.dto.Recipes;
 import com.naveen.backingapp.dto.StepsItem;
@@ -27,6 +29,9 @@ public class RecipeStepsListActivity extends AppCompatActivity {
     @BindView(R.id.item_list)
     View recyclerView;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     Unbinder unbinder;
 
     @Override
@@ -35,6 +40,15 @@ public class RecipeStepsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_item_list);
 
         unbinder = ButterKnife.bind(this);
+
+        toolbar.setNavigationIcon(R.mipmap.ic_back);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         Bundle bn = getIntent().getExtras();
 

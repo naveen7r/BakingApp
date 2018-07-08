@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ import com.google.android.exoplayer2.util.Util;
 import com.naveen.backingapp.dto.IngredientsItem;
 import com.naveen.backingapp.dto.Recipes;
 import com.naveen.backingapp.dto.StepsItem;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,9 +69,13 @@ public class ItemDetailFragment extends Fragment implements Player.EventListener
     @BindView(R.id.tvRecipieInstruction)
     TextView tvRecipieInstruction;
 
+    @BindView(R.id.ivImage)
+    ImageView ivImage;
+
 
 
     Unbinder unbinder;
+    private long playPosition = 0;
 
 
     public ItemDetailFragment() {
@@ -118,10 +124,20 @@ public class ItemDetailFragment extends Fragment implements Player.EventListener
 
         int orientation = getResources().getConfiguration().orientation;
         String video = null;
+        String thumbnailUrl = null;
         if (step != null) {
             video = step.getVideoURL();
             if (tvRecipieInstruction != null)
                 tvRecipieInstruction.setText(step.getDescription());
+            thumbnailUrl = step.getThumbnailURL();
+            if(ivImage != null && !TextUtils.isEmpty(thumbnailUrl)){
+                Picasso.get().load(thumbnailUrl).placeholder(R.mipmap.ic_place_holder).into(ivImage);
+                ivImage.setVisibility(View.VISIBLE);
+            } else {
+                if(ivImage != null) {
+                    ivImage.setVisibility(View.GONE);
+                }
+            }
         }
         if (!TextUtils.isEmpty(video)) {
 
@@ -161,10 +177,23 @@ public class ItemDetailFragment extends Fragment implements Player.EventListener
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        String video = null;
+        if (step != null) {
+            video = step.getVideoURL();
+            initializeMediaSession();
+            initializePlayer(Uri.parse(video));
+        }
+    }
 
     @Override
     public void onPause() {
         super.onPause();
+        if(exoPlayer != null){
+            playPosition = exoPlayer.getCurrentPosition();
+        }
         releasePlayer();
     }
 
@@ -194,12 +223,14 @@ public class ItemDetailFragment extends Fragment implements Player.EventListener
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+
         if (outState != null) {
             outState.putParcelable(getString(R.string.recipe_ingredients), recipes);
             outState.putParcelable(getString(R.string.step), step);
             outState.putBoolean(getString(R.string.isTwoPane), isTwoPane);
+            outState.putLong(getString(R.string.play_pos), playPosition);
         }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -209,6 +240,12 @@ public class ItemDetailFragment extends Fragment implements Player.EventListener
             recipes = savedInstanceState.getParcelable(getString(R.string.recipe_ingredients));
             step = savedInstanceState.getParcelable(getString(R.string.step));
             isTwoPane = savedInstanceState.getBoolean(getString(R.string.isTwoPane));
+            playPosition = savedInstanceState.getLong(getString(R.string.play_pos));
+            if(exoPlayer != null) {
+                exoPlayer.prepare(mediaSource, false, true);
+                exoPlayer.seekTo(playPosition);
+                exoPlayer.setPlayWhenReady(true);
+            }
         }
     }
 
@@ -263,6 +300,7 @@ public class ItemDetailFragment extends Fragment implements Player.EventListener
                     Util.getUserAgent(getActivity(), userAgent), bandwidthMeter);
             mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(mediaUri);
             exoPlayer.prepare(mediaSource, false, true);
+            exoPlayer.seekTo(playPosition);
             exoPlayer.setPlayWhenReady(true);
         }
     }
@@ -304,7 +342,9 @@ public class ItemDetailFragment extends Fragment implements Player.EventListener
         } else if ((playbackState == Player.STATE_READY)) {
             stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, exoPlayer.getCurrentPosition(), 1f);
         }
-        mediaSession.setPlaybackState(stateBuilder.build());
+        if(mediaSession != null) {
+            mediaSession.setPlaybackState(stateBuilder.build());
+        }
     }
 
     @Override
@@ -325,6 +365,7 @@ public class ItemDetailFragment extends Fragment implements Player.EventListener
         }
         if(video != null && exoPlayer != null && mediaSource != null) {
             exoPlayer.prepare(mediaSource, false, true);
+            exoPlayer.seekTo(playPosition);
             exoPlayer.setPlayWhenReady(true);
         }
     }

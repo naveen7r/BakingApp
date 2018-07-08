@@ -4,14 +4,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.naveen.backingapp.R;
 import com.naveen.backingapp.dto.Recipes;
 import com.naveen.backingapp.listener.RecipesListener;
 import com.naveen.backingapp.widget.ReceipeService;
+import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 
@@ -41,6 +44,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         if (position < recipes.length) {
             final Recipes recipe = recipes[position];
             holder.tvRecipeName.setText(recipe.getName());
+            if(!TextUtils.isEmpty(recipe.getImage())) {
+                Picasso.get().load(recipe.getImage()).placeholder(R.mipmap.ic_place_holder).into(holder.ivImage);
+            }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -71,6 +77,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
         @BindView(R.id.tvRecipeName)
         TextView tvRecipeName;
+
+        @BindView(R.id.ivImage)
+        ImageView ivImage;
 
         public RecipeHolder(View itemView) {
             super(itemView);

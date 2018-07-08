@@ -2,6 +2,7 @@ package com.naveen.backingapp;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -23,6 +24,8 @@ public class ItemDetailActivity extends AppCompatActivity {
     @BindView(R.id.llControlls)
     LinearLayout llControls;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     Unbinder unbinder;
     @Override
@@ -30,6 +33,17 @@ public class ItemDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
         unbinder = ButterKnife.bind(this);
+
+
+
+        toolbar.setNavigationIcon(R.mipmap.ic_back);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
 
         if (savedInstanceState == null) {
